@@ -1,0 +1,13 @@
+[project]
+name = "photo-mover"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "black>=24.0",
+    "pytest>=7.0",
+]
