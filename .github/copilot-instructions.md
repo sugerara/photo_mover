@@ -13,10 +13,9 @@
 
 ## Build and Test
 - 推奨手順（ローカル）:
-  - 仮想環境作成: `python -m venv .venv`
-  - 有効化（Windows PowerShell）: `.\.venv\Scripts\Activate.ps1` もしくは cmd: `.\.venv\Scripts\activate.bat`
-  - 依存インストール: `pip install -r requirements.txt`
-  - テスト実行: `pytest -q`
+  - 仮想環境作成: `uv venv` (または自動的に作成される)
+  - 依存インストール: `uv sync`
+  - テスト実行: `uv run pytest -q`
 - 自動化: CI では上記と同じコマンドを順に実行してください。
 
 ## Project Conventions
