@@ -31,5 +31,12 @@
 - ユーザーのホームやシステム重要ディレクトリを誤って上書きしないよう、移動先の確認を行うこと。
 - 実行前に `--dry-run` を推奨。自動実行（CIやスケジューラ）する場合は十分なテストと限定された権限で動かすこと。
 
+## Issues の使い方
+- 目的: バグ報告や機能要望、CI/ワークフロー追加などのために Issue を使用してください。
+- 背景: Issue には発生状況や前提を明確に記載すると対応が速くなります。
+- 要件: バグ報告では再現手順・環境情報を、機能要望では目的・要件・受け入れ基準を必ず記載してください。
+- 受け入れ基準: 修正後に再現手順でエラーが発生しないこと、関連テストが追加され CI を通過することを推奨します。
+- 補足: `.github/ISSUE_TEMPLATE` のテンプレートを利用してください（`Bug Report` / `Feature Request`）。ラベル付けは `bug` / `enhancement` を想定しています。
+
 ---
 If anything in these notes is unclear or you want more project-specific rules (naming, packaging, CI), tell me which area to expand.
