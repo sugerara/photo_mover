@@ -15,7 +15,14 @@ def is_media(path: Path, extensions: Iterable[str]) -> bool:
     return path.is_file() and path.suffix.lstrip(".").lower() in extensions
 
 
-def move_media(src: Path, dst: Path, *, recursive: bool = False, dry_run: bool = True, extensions: Iterable[str] | None = None) -> List[Path]:
+def move_media(
+    src: Path,
+    dst: Path,
+    *,
+    recursive: bool = False,
+    dry_run: bool = True,
+    extensions: Iterable[str] | None = None,
+) -> List[Path]:
     """Move media files from src into dst.
 
     Returns list of files that would be/was moved (destination paths).
