@@ -9,6 +9,25 @@ uv sync
 uv run python -m photo_mover --src "C:\path\to\source" --dst "D:\path\to\dest" --dry-run
 ```
 
+CSV 出力（ファイル一覧の事前調査）
+
+移動前にファイルの重複や拡張子・サイズ分布を調査できます。
+
+```bash
+# ファイル一覧を CSV で標準出力に出力
+uv run python -m photo_mover --src ./photos --csv
+
+# サブディレクトリも再帰的にスキャン
+uv run python -m photo_mover --src ./photos --csv --recursive
+
+# SHA256 ハッシュ付きで出力（重複検出用）
+uv run python -m photo_mover --src ./photos --csv --recursive --csv-include-hash
+```
+
+出力カラム: `filename`, `extension`, `relative_path`, `size_bytes`（`--csv-include-hash` 指定時は `sha256` を追加）
+
+> **注意**: `--csv-include-hash` はファイルごとにハッシュを計算するため、大量ファイルでは処理時間が増加します。
+
 オプションの一覧は `--help` を参照してください。
 
 Issue の報告について
