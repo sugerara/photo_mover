@@ -23,7 +23,7 @@ def create_file(path: Path, content: bytes = b"x") -> Path:
 
 
 def test_scan_media_basic(tmp_path):
-    """基本的な非再帰スキャン: メディアファイルのみ返す"""
+    """基本的な非再帰スキャン: 全ファイルを返す"""
     src = tmp_path / "photos"
     src.mkdir()
     create_file(src / "a.jpg", b"hello")
@@ -32,9 +32,9 @@ def test_scan_media_basic(tmp_path):
 
     results = list(scan_media(src))
 
-    assert len(results) == 2
+    assert len(results) == 3
     filenames = {r.filename for r in results}
-    assert filenames == {"a.jpg", "b.png"}
+    assert filenames == {"a.jpg", "b.png", "readme.txt"}
 
 
 def test_scan_media_fields(tmp_path):
@@ -81,6 +81,22 @@ def test_scan_media_non_recursive_ignores_subdirs(tmp_path):
 
     assert len(results) == 1
     assert results[0].filename == "a.jpg"
+
+
+def test_scan_media_all_files_when_no_extensions(tmp_path):
+    """--extensions 未指定時は画像以外も含む全ファイルを返す"""
+    src = tmp_path / "files"
+    src.mkdir()
+    create_file(src / "a.jpg", b"photo")
+    create_file(src / "readme.txt", b"text")
+    create_file(src / "data.csv", b"csv")
+    create_file(src / "script.py", b"code")
+
+    results = list(scan_media(src))
+
+    assert len(results) == 4
+    filenames = {r.filename for r in results}
+    assert filenames == {"a.jpg", "readme.txt", "data.csv", "script.py"}
 
 
 def test_scan_media_custom_extensions(tmp_path):
@@ -303,14 +319,16 @@ def test_csv_end_to_end(tmp_path):
     reader = csv.DictReader(output)
     rows = list(reader)
 
-    assert len(rows) == 2
+    assert len(rows) == 3
     filenames = {r["filename"] for r in rows}
-    assert filenames == {"a.jpg", "b.mp4"}
+    assert filenames == {"a.jpg", "b.mp4", "readme.txt"}
     for row in rows:
         if row["filename"] == "a.jpg":
             assert row["size_bytes"] == "6"  # len(b"photo1")
         elif row["filename"] == "b.mp4":
             assert row["size_bytes"] == "5"  # len(b"video")
+        elif row["filename"] == "readme.txt":
+            assert row["size_bytes"] == "9"  # len(b"not media")
 
 
 def test_csv_end_to_end_with_hash(tmp_path):

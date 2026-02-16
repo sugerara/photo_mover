@@ -36,12 +36,10 @@ def scan_media(
     extensions: Iterable[str] | None = None,
     include_hash: bool = False,
 ) -> Iterator[MediaFileInfo]:
-    from .mover import DEFAULT_EXTENSIONS, is_media
-
-    if extensions is None:
-        exts = DEFAULT_EXTENSIONS
+    if extensions is not None:
+        exts: set[str] | None = {e.lower().lstrip(".") for e in extensions}
     else:
-        exts = {e.lower().lstrip(".") for e in extensions}
+        exts = None
 
     src = Path(src)
     if not src.exists():
@@ -50,16 +48,19 @@ def scan_media(
     iterator = src.rglob("*") if recursive else src.iterdir()
 
     for p in sorted(iterator):
-        if is_media(p, exts):
-            rel = p.relative_to(src)
-            sha = compute_sha256(p) if include_hash else None
-            yield MediaFileInfo(
-                filename=p.name,
-                extension=p.suffix.lstrip(".").lower(),
-                relative_path=str(rel),
-                size_bytes=p.stat().st_size,
-                sha256=sha,
-            )
+        if not p.is_file():
+            continue
+        if exts is not None and p.suffix.lstrip(".").lower() not in exts:
+            continue
+        rel = p.relative_to(src)
+        sha = compute_sha256(p) if include_hash else None
+        yield MediaFileInfo(
+            filename=p.name,
+            extension=p.suffix.lstrip(".").lower(),
+            relative_path=str(rel),
+            size_bytes=p.stat().st_size,
+            sha256=sha,
+        )
 
 
 _CSV_COLUMNS_BASE = ["filename", "extension", "relative_path", "size_bytes"]

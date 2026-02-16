@@ -12,9 +12,10 @@ uv run python -m photo_mover --src "C:\path\to\source" --dst "D:\path\to\dest" -
 CSV 出力（ファイル一覧の事前調査）
 
 移動前にファイルの重複や拡張子・サイズ分布を調査できます。
+`--csv` は画像・動画に限らず全ファイルを対象にします。特定の拡張子に絞り込みたい場合は `--extensions` を指定してください。
 
 ```bash
-# ファイル一覧を CSV で標準出力に出力
+# ファイル一覧を CSV で標準出力に出力（全ファイル対象）
 uv run python -m photo_mover --src ./photos --csv
 
 # サブディレクトリも再帰的にスキャン
@@ -22,6 +23,9 @@ uv run python -m photo_mover --src ./photos --csv --recursive
 
 # SHA256 ハッシュ付きで出力（重複検出用）
 uv run python -m photo_mover --src ./photos --csv --recursive --csv-include-hash
+
+# 特定の拡張子のみに絞り込む
+uv run python -m photo_mover --src ./photos --csv --extensions jpg,png,mp4
 ```
 
 出力カラム: `filename`, `extension`, `relative_path`, `size_bytes`（`--csv-include-hash` 指定時は `sha256` を追加）
