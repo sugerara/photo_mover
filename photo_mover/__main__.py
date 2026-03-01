@@ -68,7 +68,7 @@ def main(argv=None):
                 Path(args.src),
                 Path(args.dst),
                 recursive=args.recursive,
-                dry_run=args.dry_run or True,
+                dry_run=args.dry_run,
                 extensions=exts,
             )
             if args.dry_run:
