@@ -47,3 +47,16 @@ def test_cli_move_without_dry_run(tmp_path):
 
     assert (dst / "photo.jpg").exists()
     assert not (src / "photo.jpg").exists()
+
+
+def test_cli_dry_run(tmp_path):
+    """--dry-run 指定時、ファイルが移動されないこと"""
+    src = tmp_path / "src"
+    dst = tmp_path / "dst"
+    src.mkdir()
+    touch(src / "photo.jpg")
+
+    main(["--src", str(src), "--dst", str(dst), "--dry-run"])
+
+    assert not (dst / "photo.jpg").exists()
+    assert (src / "photo.jpg").exists()
