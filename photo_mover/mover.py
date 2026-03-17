@@ -11,6 +11,21 @@ logger = logging.getLogger(__name__)
 DEFAULT_EXTENSIONS = {"jpg", "jpeg", "png", "heic", "mp4", "mov", "avi", "gif"}
 
 
+def _resolve_target(target: Path) -> Path:
+    """Return a non-colliding path by appending _1, _2, ... if target exists."""
+    if not target.exists():
+        return target
+    stem = target.stem
+    suffix = target.suffix
+    parent = target.parent
+    n = 1
+    while True:
+        candidate = parent / f"{stem}_{n}{suffix}"
+        if not candidate.exists():
+            return candidate
+        n += 1
+
+
 def is_media(path: Path, extensions: Iterable[str]) -> bool:
     return path.is_file() and path.suffix.lstrip(".").lower() in extensions
 
@@ -49,7 +64,7 @@ def move_media(
         try:
             if is_media(p, extensions):
                 rel = p.relative_to(src)
-                target = dst.joinpath(rel.name)
+                target = _resolve_target(dst.joinpath(rel.name))
                 if dry_run:
                     logger.info("DRY RUN: move %s -> %s", p, target)
                     moved.append(target)
